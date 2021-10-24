@@ -17,89 +17,56 @@ namespace ProgressBarDance_1
         private delegate void Safeme(object numb);
         List<VerticalProgressBar> verticals;
         Size sizeBar;
-        int countThread;
-        ThreadStart [] threadStarts;
-        Thread[] threads;
-        Safemethod safemethod;
-        Safeme temp;
-        //TimerCallback callback;
-        //System.Threading.Timer timer;
-        
+        int countThread;      
+        Safemethod safemethod;       
         public Form1()
         {
             InitializeComponent();
             safemethod = new Safemethod(Foo);
-           temp = new Safeme(foo2);
-            verticals = new List<VerticalProgressBar>();
-            //callback = new TimerCallback(MyPerformStep);
-            //timer= new System.Threading.Timer(callback);
+            verticals = new List<VerticalProgressBar>();           
             sizeBar = new Size(60, groupBox1.Height - 20);
             comboBox1.Text = comboBox1.Items[0].ToString();           
             this.StartPosition = FormStartPosition.CenterScreen;
-            button2.Enabled = false;
+            Clear.Enabled = false;
         }
         public void MyPerformStep(object obj)
         {
-            System.Threading.Timer timer1=obj as System.Threading.Timer ;
             Random r = new Random();
-               verticals[r.Next(0,countThread)].Invoke(safemethod, r.Next(0, countThread));
-            // listBox1.Invoke(temp, (object)Thread.CurrentThread.ManagedThreadId);
-            
-            //if (verticals[r.Next(0, countThread)].Value == verticals[r.Next(0, countThread)].Maximum)
-            //     timer1.Dispose();
-        }
-        public void foo2(object t)
-        {
-            listBox1.Items.Add($"Поток: {t.ToString()}");
-        }
+            if((int)obj<verticals.Count && verticals[(int)obj].InvokeRequired)
+            verticals[(int)obj].Invoke(safemethod, r.Next(0, countThread));          
+           
+        }      
         public void Foo(int numberBar)
         {            
             if(countThread!=0)
             {
-                int t = Thread.CurrentThread.ManagedThreadId;
                 verticals[numberBar].PerformStep();
-                listBox1.Items.Add($"Поток: {t.ToString()}");
             }           
         }
-        public void LetsDance()
+        public void LetsDance(object state)
         {
             TimerCallback callback = new TimerCallback(MyPerformStep);
-            System.Threading.Timer timer=new System.Threading.Timer(callback);
-            timer.Change(0, 100);
-            
+            System.Threading.Timer timer=new System.Threading.Timer(callback,state,0,100);
+            if(verticals[(int)state].Value==verticals[(int)state].Maximum)
+            {
+                timer.Dispose();
+            }
         }
-
-        public void LetsDance1(object a)
-        {
-            TimerCallback callback = new TimerCallback(MyPerformStep);
-            System.Threading.Timer timer = new System.Threading.Timer(callback);
-            timer.Change(0, 100);
-
-        }
-
         //Кнопка старт.
         private void button1_Click(object sender, EventArgs e)
         {           
-            if (button2.Enabled == false)
+            if (Clear.Enabled == false)
             {
-                button2.Enabled = true;
+                Clear.Enabled = true;
             }
             comboBox1.Enabled = false;
             button1.Enabled = false;
             //Число потоков по числу баров.
-            countThread = comboBox1.SelectedIndex+1;
-            //Массив потоков.
-            threads = new Thread[countThread];
-            //Массив делегатов.
-            threadStarts = new ThreadStart[countThread];
-            //Инициализация потоков и их запуск.
+            countThread = comboBox1.SelectedIndex+1;           
+            //Постановка потоков в очередь пула потоков.
             for (int i=0;i<countThread;i++)
-            {
-                //threadStarts[i] = new ThreadStart(LetsDance);
-                //threads[i] = new Thread(threadStarts[i]);
-                //threads[i].Start();
-                //listBox1.Invoke(temp, threads[i].ManagedThreadId);
-                ThreadPool.QueueUserWorkItem(LetsDance1,null);
+            {               
+                ThreadPool.QueueUserWorkItem(LetsDance, i);
             }            
         }
         private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -116,11 +83,7 @@ namespace ProgressBarDance_1
             PlacementBars(comboBox1.Text);
         }
         public void PlacementBars(string number)
-        {
-            if(verticals.Count>0)
-            {
-                verticals.Clear();
-            }
+        {          
             int num = Int32.Parse(number);
             Point positionBar = new Point(0, 20)
             {
@@ -137,15 +100,9 @@ namespace ProgressBarDance_1
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < countThread; i++)
-            {
-                threads[i].Abort();
-                
-            }
-            //timer.Dispose();
-            button2.Enabled = false;
+        private void Clear_Click(object sender, EventArgs e)
+        {           
+            Clear.Enabled = false;
             comboBox1.Enabled = true;
             button1.Enabled = true;
             verticals.Clear();

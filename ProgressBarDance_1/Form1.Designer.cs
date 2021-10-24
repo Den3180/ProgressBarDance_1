@@ -33,8 +33,7 @@ namespace ProgressBarDance_1
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.Clear = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -80,31 +79,22 @@ namespace ProgressBarDance_1
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // button2
+            // Clear
             // 
-            this.button2.Location = new System.Drawing.Point(439, 375);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(144, 48);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "Сброс";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(831, 82);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(239, 277);
-            this.listBox1.TabIndex = 5;
+            this.Clear.Location = new System.Drawing.Point(439, 375);
+            this.Clear.Name = "Clear";
+            this.Clear.Size = new System.Drawing.Size(144, 48);
+            this.Clear.TabIndex = 4;
+            this.Clear.Text = "Сброс";
+            this.Clear.UseVisualStyleBackColor = true;
+            this.Clear.Click += new System.EventHandler(this.Clear_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1128, 450);
-            this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.button2);
+            this.ClientSize = new System.Drawing.Size(791, 450);
+            this.Controls.Add(this.Clear);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.comboBox1);
@@ -122,8 +112,7 @@ namespace ProgressBarDance_1
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Button Clear;
     }
 }
 
