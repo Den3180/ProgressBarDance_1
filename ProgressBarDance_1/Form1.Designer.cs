@@ -32,8 +32,8 @@ namespace ProgressBarDance_1
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.Clear = new System.Windows.Forms.Button();
+            this.StartButton = new System.Windows.Forms.Button();
+            this.ClearButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -69,33 +69,33 @@ namespace ProgressBarDance_1
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             // 
-            // button1
+            // StartButton
             // 
-            this.button1.Location = new System.Drawing.Point(209, 374);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(146, 49);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Start";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.StartButton.Location = new System.Drawing.Point(209, 374);
+            this.StartButton.Name = "StartButton";
+            this.StartButton.Size = new System.Drawing.Size(146, 49);
+            this.StartButton.TabIndex = 3;
+            this.StartButton.Text = "Start";
+            this.StartButton.UseVisualStyleBackColor = true;
+            this.StartButton.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Clear
+            // ClearButton
             // 
-            this.Clear.Location = new System.Drawing.Point(439, 375);
-            this.Clear.Name = "Clear";
-            this.Clear.Size = new System.Drawing.Size(144, 48);
-            this.Clear.TabIndex = 4;
-            this.Clear.Text = "Сброс";
-            this.Clear.UseVisualStyleBackColor = true;
-            this.Clear.Click += new System.EventHandler(this.Clear_Click);
+            this.ClearButton.Location = new System.Drawing.Point(439, 375);
+            this.ClearButton.Name = "ClearButton";
+            this.ClearButton.Size = new System.Drawing.Size(144, 48);
+            this.ClearButton.TabIndex = 4;
+            this.ClearButton.Text = "Сброс";
+            this.ClearButton.UseVisualStyleBackColor = true;
+            this.ClearButton.Click += new System.EventHandler(this.Clear_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(791, 450);
-            this.Controls.Add(this.Clear);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(796, 450);
+            this.Controls.Add(this.ClearButton);
+            this.Controls.Add(this.StartButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label1);
@@ -111,8 +111,8 @@ namespace ProgressBarDance_1
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button Clear;
+        private System.Windows.Forms.Button StartButton;
+        private System.Windows.Forms.Button ClearButton;
     }
 }
 

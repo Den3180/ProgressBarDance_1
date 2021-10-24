@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace ProgressBarDance_1
 {
@@ -27,13 +28,14 @@ namespace ProgressBarDance_1
             sizeBar = new Size(60, groupBox1.Height - 20);
             comboBox1.Text = comboBox1.Items[0].ToString();           
             this.StartPosition = FormStartPosition.CenterScreen;
-            Clear.Enabled = false;
+            ClearButton.Enabled = false;
         }
         public void MyPerformStep(object obj)
         {
             Random r = new Random();
-            if((int)obj<verticals.Count && verticals[(int)obj].InvokeRequired)
-            verticals[(int)obj].Invoke(safemethod, r.Next(0, countThread));          
+            int count = (int)obj;
+            if(count<verticals.Count && verticals[count].InvokeRequired)
+            verticals[count].Invoke(safemethod, r.Next(0, countThread));          
            
         }      
         public void Foo(int numberBar)
@@ -55,12 +57,12 @@ namespace ProgressBarDance_1
         //Кнопка старт.
         private void button1_Click(object sender, EventArgs e)
         {           
-            if (Clear.Enabled == false)
+            if (ClearButton.Enabled == false)
             {
-                Clear.Enabled = true;
+                ClearButton.Enabled = true;
             }
             comboBox1.Enabled = false;
-            button1.Enabled = false;
+            StartButton.Enabled = false;
             //Число потоков по числу баров.
             countThread = comboBox1.SelectedIndex+1;           
             //Постановка потоков в очередь пула потоков.
@@ -91,10 +93,11 @@ namespace ProgressBarDance_1
             };
             for (int i=0; i<num; i++)
             {
-                verticals.Add(new VerticalProgressBar());
-                verticals[i].Size = sizeBar;
+                verticals.Add(new VerticalProgressBar { Size=sizeBar});
+                //verticals[i].Size = sizeBar;
                 verticals[i].Location = positionBar;
                 verticals[i].Step = 1;
+                ProgressBarColor.SetState(verticals[i], 2);
                 groupBox1.Controls.Add(verticals[i]);
                 positionBar.X += 2 * sizeBar.Width;
             }
@@ -102,16 +105,17 @@ namespace ProgressBarDance_1
 
         private void Clear_Click(object sender, EventArgs e)
         {           
-            Clear.Enabled = false;
+            ClearButton.Enabled = false;
             comboBox1.Enabled = true;
-            button1.Enabled = true;
+            StartButton.Enabled = true;
             verticals.Clear();
             countThread = 0;
             comboBox1_SelectedIndexChanged(sender, e);
         }
+      
     }
     public class VerticalProgressBar : ProgressBar
-    {
+    { 
         protected override CreateParams CreateParams
         {
             get
@@ -120,6 +124,16 @@ namespace ProgressBarDance_1
                 cp.Style |= 0x04;
                 return cp;
             }
-        }       
+        }
+
+    }
+    public static class ProgressBarColor
+    {
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr w, IntPtr l);
+        public static void SetState(this ProgressBar p, int state)
+        {
+            SendMessage(p.Handle, 1040, (IntPtr)state, IntPtr.Zero);
+        }
     }
 }
