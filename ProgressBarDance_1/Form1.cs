@@ -14,22 +14,27 @@ namespace ProgressBarDance_1
 {
     public partial class Form1 : Form
     {
+        //Делегат для функции безопасного обращения к ProgressBar из других потоков.
         private delegate void Safemethod(int numberBar);
-        private delegate void Safeme(object numb);
+        //Список баров.
         List<VerticalProgressBar> verticals;
+        //Размер баров.
         Size sizeBar;
-        int countThread;      
+        //Колличество баров.
+        int countThread;         
         Safemethod safemethod;       
         public Form1()
         {
             InitializeComponent();
-            safemethod = new Safemethod(Foo);
+            safemethod = new Safemethod(ProgressBarAction);
             verticals = new List<VerticalProgressBar>();           
             sizeBar = new Size(60, groupBox1.Height - 20);
             comboBox1.Text = comboBox1.Items[0].ToString();           
             this.StartPosition = FormStartPosition.CenterScreen;
             ClearButton.Enabled = false;
         }
+        
+        //Функция обратного вызова дл таймера.
         public void MyPerformStep(object obj)
         {
             Random r = new Random();
@@ -37,14 +42,16 @@ namespace ProgressBarDance_1
             if(count<verticals.Count && verticals[count].InvokeRequired)
             verticals[count].Invoke(safemethod, r.Next(0, countThread));          
            
-        }      
-        public void Foo(int numberBar)
+        }  
+        //Приращение баров.
+        public void ProgressBarAction(int numberBar)
         {            
             if(countThread!=0)
             {
                 verticals[numberBar].PerformStep();
             }           
         }
+        //Функция для передачи в очередь пула потоков.
         public void LetsDance(object state)
         {
             TimerCallback callback = new TimerCallback(MyPerformStep);
@@ -71,11 +78,12 @@ namespace ProgressBarDance_1
                 ThreadPool.QueueUserWorkItem(LetsDance, i);
             }            
         }
+        //Запрет клавиатурного ввода в Combobox.
         private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
         }
-
+        //Перерисовка поля баров в зависимости от выбранного количества.
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (groupBox1.Controls.Count > 0) 
@@ -84,25 +92,25 @@ namespace ProgressBarDance_1
             }
             PlacementBars(comboBox1.Text);
         }
+        //Функция перерисовки баров.
         public void PlacementBars(string number)
         {          
             int num = Int32.Parse(number);
+            Random randomColor = new Random();
             Point positionBar = new Point(0, 20)
             {
                 X = (groupBox1.Width / 2 - (sizeBar.Width / 2)) - sizeBar.Width * comboBox1.SelectedIndex
             };
             for (int i=0; i<num; i++)
             {
-                verticals.Add(new VerticalProgressBar { Size=sizeBar});
-                //verticals[i].Size = sizeBar;
+                verticals.Add(new VerticalProgressBar { Size=sizeBar, Step=1, Location=positionBar});
                 verticals[i].Location = positionBar;
-                verticals[i].Step = 1;
-                ProgressBarColor.SetState(verticals[i], 2);
+                ProgressBarColor.SetState(verticals[i], randomColor.Next(1,4));
                 groupBox1.Controls.Add(verticals[i]);
                 positionBar.X += 2 * sizeBar.Width;
             }
         }
-
+        //Кнопка сброс.
         private void Clear_Click(object sender, EventArgs e)
         {           
             ClearButton.Enabled = false;
@@ -114,6 +122,7 @@ namespace ProgressBarDance_1
         }
       
     }
+    //Вертикальный ProgressBar.
     public class VerticalProgressBar : ProgressBar
     { 
         protected override CreateParams CreateParams
@@ -127,6 +136,7 @@ namespace ProgressBarDance_1
         }
 
     }
+    //Экспорт функции для смены настроек цветов ProgressBar.
     public static class ProgressBarColor
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
